@@ -4,19 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aventuras - Aventura RPG</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- CSS Personalizado -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Ícones (Opcional) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 <body>
 
-    <div class="container">
-        <h1 class="text-center">Aventuras</h1>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Aventuras</h1>
         
         <!-- Seletor de Abas (Tabs) -->
-        <div class="tabs">
-            <button class="tab-button active" onclick="showTab(1)">Aventura 1</button>
-            <button class="tab-button" onclick="showTab(2)">Aventura 2</button>
-            <button class="tab-button" onclick="showTab(3)">Aventura 3</button>
+        <div class="btn-group d-flex justify-content-center mb-4">
+            <button class="tab-button btn btn-secondary active" onclick="showTab(1)">Aventura 1</button>
+            <button class="tab-button btn btn-secondary" onclick="showTab(2)">Aventura 2</button>
+            <button class="tab-button btn btn-secondary" onclick="showTab(3)">Aventura 3</button>
         </div>
 
         <!-- Conteúdo das Aventuras -->
@@ -31,7 +39,7 @@
 
                 <!-- Cena Expansível -->
                 <div class="expandable-box">
-                    <button class="expand-btn" onclick="toggleScene('scene1')">Cena 1: Quem é Hennd Kalamar?</button>
+                    <button class="expand-btn btn btn-info" onclick="toggleScene('scene1')">Cena 1: Quem é Hennd Kalamar?</button>
                     <div class="scene-content" id="scene1">
                         <p>
                             O mestre pede aos jogadores um <strong>teste de Percepção</strong>. O personagem com o melhor resultado vê, a poucos metros, um <strong>homem ferido</strong> emergindo do bosque. Ele parece assustado, sem forças para continuar, balbucia um pedido de ajuda e desmaia.
@@ -59,13 +67,13 @@
 
                         <p>Após o diálogo, Hillard indica o caminho para o <strong>covil Sszzaazita</strong>, localizado na encosta do Monte Palidor, a pouco mais de um dia de viagem para o sul. Isso significa que, mesmo viajando rápido, os heróis provavelmente precisarão acampar antes de chegar ao destino.</p>
 
-                        <p><img src="https://i.pinimg.com/236x/39/7d/64/397d640a843a6eacbbc0c7bce049492e.jpg" alt="Imagem de Hillard" style="max-width: 300px; margin-top: 20px;"/></p>
+                        <p><img src="https://i.pinimg.com/236x/39/7d/64/397d640a843a6eacbbc0c7bce049492e.jpg" alt="Imagem de Hillard" class="img-fluid mt-3" style="max-width: 300px;"/></p>
                     </div>
                 </div>
 
                 <!-- Cena Expansível -->
                 <div class="expandable-box">
-                    <button class="expand-btn" onclick="toggleScene('scene2')">Cena 2: Explorando o Monte Palidor</button>
+                    <button class="expand-btn btn btn-info" onclick="toggleScene('scene2')">Cena 2: Explorando o Monte Palidor</button>
                     <div class="scene-content" id="scene2">
                         <p>
                             Chegar até o Monte Palidor não é uma tarefa difícil. O terreno e o clima são tranquilos, e não há muitas feras perigosas pela região. Porém, o Monte Palidor é famoso por suas inúmeras cavernas e túneis naturais, usados como tocas por diversas criaturas. Boatos até mencionam um ninho de dragão nas proximidades do topo. Para a sorte dos aventureiros, não será necessário escalar até lá — mas, mesmo na base da montanha, o risco é real.
@@ -85,7 +93,7 @@
                         <p>Após acumular 5 sucessos em vasculhar, os heróis encontram uma caverna suspeita com uma serpente entalhada na entrada — um sinal claro de que se trata de um covil sszzaazita.</p>
 
                         <!-- Imagem adicional -->
-                        <p><img src="https://i1.sndcdn.com/artworks-000205183873-guk94p-t500x500.jpg" alt="Imagem do Monte Palidor" style="max-width: 300px; margin-top: 20px;"/></p>
+                        <p><img src="https://i1.sndcdn.com/artworks-000205183873-guk94p-t500x500.jpg" alt="Imagem do Monte Palidor" class="img-fluid mt-3" style="max-width: 300px;"/></p>
                     </div>
                 </div>
 
@@ -107,6 +115,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Bootstrap JS e dependências (jQuery e Popper.js) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- JS Personalizado -->
     <script src="scripts.js"></script>
