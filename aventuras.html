@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aventuras - Aventura RPG</title>
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="text-center">Aventuras</h1>
+        
+        <!-- Seletor de Abas (Tabs) -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab(1)">Aventura 1</button>
+            <button class="tab-button" onclick="showTab(2)">Aventura 2</button>
+            <button class="tab-button" onclick="showTab(3)">Aventura 3</button>
+        </div>
+
+        <!-- Conteúdo das Aventuras -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="adventure1">
+                <h2 class="tab-title">Aventura 1: A Busca por Hennd Kalamar</h2>
+                <p class="adventure-description">
+                    É uma manhã de sol. O grupo de aspirantes a aventureiros percorre as estradas de <strong>Deheon</strong>, na região sul do reino, longe de qualquer povoado. A paisagem é monótona, com vastas planícies pontilhadas por pequenos bosques. O único destaque é o imponente <strong>Monte Palidor</strong>, a maior montanha do reino, ao sul.
+                </p>
+
+                <p><strong>No início do dia, tudo parece tranquilo, até que…</strong></p>
+
+                <!-- Cena Expansível -->
+                <div class="expandable-box">
+                    <button class="expand-btn" onclick="toggleScene('scene1')">Cena 1: Quem é Hennd Kalamar?</button>
+                    <div class="scene-content" id="scene1">
+                        <p>
+                            O mestre pede aos jogadores um <strong>teste de Percepção</strong>. O personagem com o melhor resultado vê, a poucos metros, um <strong>homem ferido</strong> emergindo do bosque. Ele parece assustado, sem forças para continuar, balbucia um pedido de ajuda e desmaia.
+                        </p>
+
+                        <h4>Combate:</h4>
+                        <p>
+                            Quando os personagens se aproximam, <strong>quatro criaturas encapuzadas</strong> surgem das folhagens para atacar.<br> 
+                            <em><strong>**Criaturas: Capangas Sszzaazita x4**</strong></em>
+                        </p>
+
+                        <p>Após o combate, os personagens podem acudir o homem ferido. Com um <strong>teste de Cura (CD 15)</strong> ou qualquer efeito que recupere pontos de vida, ele pode ser acordado imediatamente. Caso contrário, ele despertará em 2d10 minutos, ainda fraco, mas fora de perigo, e capaz de conversar.</p>
+
+                        <h4>Diálogo com o Homem Ferido:</h4>
+                        <p>O homem se apresenta como <strong>Hillard</strong>, um acólito da Igreja de Valkaria, a serviço de <strong>Hennd Kalamar</strong>.</p>
+
+                        <div class="question-box">
+                            <h4>Perguntas que os Jogadores Podem Fazer:</h4>
+                            <p><strong>Quem é você?</strong> <br> “Me chamo Hillard. Sou acólito da Igreja de Valkaria, a serviço de Hennd Kalamar.”</p>
+                            <p><strong>Quem é Hennd Kalamar?</strong> <br> “Ele é o sumo-sacerdote de Valkaria. Fui enviado, com outro acólito, para recebê-lo ao fim de sua missão atual. Mas ele não apareceu no ponto de encontro.”</p>
+                            <p><strong>O que aconteceu com você?</strong> <br> “Quando o senhor Kalamar não veio, eu e meu colega fomos investigar. Descobrimos indícios de que ele havia sido capturado por sszzaazitas, como vítima para um sacrifício. Mas fomos descobertos. Consegui fugir, mas meu companheiro não teve a mesma sorte. Temo que tenha sido morto. Imploro que ajudem a salvar meu mestre. Sei que Valkaria os colocou em meu caminho por esse motivo.”</p>
+                            <p><strong>O que ganhamos se ajudarmos?</strong> <br> “Não tenho nada para oferecer. Mas meu mestre é o sumo-sacerdote de Valkaria, pode providenciar recompensas dignas. Valkaria é generosa com heróis que provam seu valor.”</p>
+                            <p><strong>Tudo bem, vamos ajudar. Você consegue nos auxiliar na missão de alguma forma?</strong> <br> “Estou muito ferido e ainda não sou um clérigo ordenado. Não sou capaz de lançar magias, nem consigo ajudar em combate. Mas posso tratar seus ferimentos.”</p>
+                        </div>
+
+                        <p>Após o diálogo, Hillard indica o caminho para o <strong>covil Sszzaazita</strong>, localizado na encosta do Monte Palidor, a pouco mais de um dia de viagem para o sul. Isso significa que, mesmo viajando rápido, os heróis provavelmente precisarão acampar antes de chegar ao destino.</p>
+
+                        <p><img src="https://i.pinimg.com/236x/39/7d/64/397d640a843a6eacbbc0c7bce049492e.jpg" alt="Imagem de Hillard" style="max-width: 300px; margin-top: 20px;"/></p>
+                    </div>
+                </div>
+
+                <!-- Cena Expansível -->
+                <div class="expandable-box">
+                    <button class="expand-btn" onclick="toggleScene('scene2')">Cena 2: Explorando o Monte Palidor</button>
+                    <div class="scene-content" id="scene2">
+                        <p>
+                            Chegar até o Monte Palidor não é uma tarefa difícil. O terreno e o clima são tranquilos, e não há muitas feras perigosas pela região. Porém, o Monte Palidor é famoso por suas inúmeras cavernas e túneis naturais, usados como tocas por diversas criaturas. Boatos até mencionam um ninho de dragão nas proximidades do topo. Para a sorte dos aventureiros, não será necessário escalar até lá — mas, mesmo na base da montanha, o risco é real.
+                        </p>
+
+                        <h4>Missão:</h4>
+                        <p>Os aventureiros devem encontrar a entrada do covil dos sszzaazitas escondida entre as cavernas do Monte Palidor.</p>
+
+                        <h4>Objetivo:</h4>
+                        <p>Encontrar a entrada do covil sszzaazita, acumulando 5 sucessos na ação de vasculhar.</p>
+
+                        <h4>Testes e Consequências:</h4>
+                        <p><strong>Vasculhar</strong> (Investigação, Percepção ou Sobrevivência, CD 15): Os personagens devem procurar pistas sobre a passagem dos sszzaazitas, vasculhando cavernas e grutas ou procurando qualquer detalhe que se destaque. Cada falha faz com que o personagem perca 1d6 pontos de vida ou 1 PM.</p>
+
+                        <p><strong>Proteger</strong> (Luta ou Pontaria, CD 15): Os personagens podem ajudar uns aos outros afastando criaturas perigosas ou abrindo caminho. Cada sucesso permite proteger um aliado de falhas futuras.</p>
+
+                        <p>Após acumular 5 sucessos em vasculhar, os heróis encontram uma caverna suspeita com uma serpente entalhada na entrada — um sinal claro de que se trata de um covil sszzaazita.</p>
+
+                        <!-- Imagem adicional -->
+                        <p><img src="https://i1.sndcdn.com/artworks-000205183873-guk94p-t500x500.jpg" alt="Imagem do Monte Palidor" style="max-width: 300px; margin-top: 20px;"/></p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane" id="adventure2">
+                <h2 class="tab-title">Aventura 2: O Retorno de Valkaria</h2>
+                <p class="adventure-description">
+                    A Deusa Valkaria foi libertada, mas seu retorno traz desafios ainda maiores. Os heróis devem navegar pelos perigos de Arton e
+                    enfrentar forças que desejam impedir o ressurgimento da deusa.
+                </p>
+            </div>
+            <div class="tab-pane" id="adventure3">
+                <h2 class="tab-title">Aventura 3: A Guerra dos Deuses</h2>
+                <p class="adventure-description">
+                    Em um cenário de guerra cósmica, os heróis são chamados para intervir na luta entre deuses e mortais. Escolhas feitas no campo de batalha
+                    podem alterar o destino do mundo para sempre.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Personalizado -->
+    <script src="scripts.js"></script>
+</body>
+</html>
