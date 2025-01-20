@@ -10,13 +10,7 @@
     { 
         nome: "Arena", 
 	descricao: "Este anfiteatro é um lugar para combatentes testarem seus talentos e ganharem algum dinheiro. A grande campeã, Caliandre, está sempre pronta para lutar de forma amistosa, trazendo à tona as habilidades dos personagens. Também é possível encontrar aqui o minotauro Juno, antigo gladiador de Tapista; e Martin, que em vida era um mercenário em Portsmouth. Os combates reúnem espectadores de Candeh’ssa, ansiosos para ver os heróis lutando, em confrontos (quase) nunca mortais. Combates contra criaturas ou viajantes planares às vezes acontecem na arena."
-	servicos: "Uma vez por repouso em Candeh’ssa, cada personagem pode participar de um combate na arena e fazer uma aposta em tibares. Seu desempenho em combate é representado com um teste de Luta:
- • 9 ou menos. Perde toda a quantia apostada.
- • 10 a 14. Recebe metade da quantia apostada.
- • 15 a 19. Recebe toda a quantia apostada.
- • 20 a 29. Recebe o dobro da quantia apostada.
- • 30 ou mais. Recebe o triplo da quantia apostada.
- Um personagem também pode apostar em uma luta como expectador, sem participar dela. Neste caso, use Jogatina.",
+	servicos: "Uma vez por repouso em Candeh’ssa, cada personagem pode participar de um combate na arena e fazer uma aposta em tibares. Seu desempenho em combate é representado com um teste de Luta. Um personagem também pode apostar em uma luta como expectador, sem participar dela. Neste caso, use Jogatina.",
         honrarias: "Você recebe um poder de combate à sua escolha",
         imagem: "https://static.wikia.nocookie.net/mashle/images/2/2f/Sounds_Movement_Spell_%28Anime%29.gif"
     },
@@ -52,13 +46,7 @@
 quaisquer outras por seu custo normal.
  Também pode-se preparar o famoso misturadinho dos deuses, prato exclusivo feito com insumos fornecidos pelos heróis. Cada porção pode ter até três 
 acompanhamentos diferentes, exigindo um ingrediente ou um mantimento (veja Ameaças de Arton, p. 401) por acompanhamento. Os efeitos dos acompanhamentos 
-são cumulativos e contam como um único bônus de alimentação.
-	 • Linguiça Desconstruída. Feita com uma mistura de carnes bem preparadas, orgulho da casa e sempre disponível. Fornece +2d4 PV temporários.
-	 • Espetinho de Kraken. Esta carne salgada pelas águas é dura e borrachenta, mas compensa com um sabor exótico. Fornece +1d4 PM temporários. 
-	• Melancia Brilhante. Famosa opção vegetariana, cultivada com a mais pura magia natural e irrigada com auxílio de boguns recém-invocados e frescos. Fornece +1 em testes de Resistência.
-	 • Vinagrete Glópico. Salada cortada em cubos com uma pitada de tempero cítrico, deliciosa, leve e sempre presente em toda mesa de churrasco. Aumenta o deslocamento em +1,5m.
-	 • Arroz. Acompanhamento simples e certeiro, harmoniza com tudo. Fornece +2 em uma perícia a sua escolha (exceto Luta e Pontaria).
-Uma porção de misturadinho com quaisquer acompanhamentos custa T$ 50.
+são cumulativos e contam como um único bônus de alimentação. Aumenta o deslocamento em +1,5m. Uma porção de misturadinho com quaisquer acompanhamentos custa T$ 50.
 ",
 	honrarias:"Você recebe +2 em Fortitude e, uma vez por dia, pode remover uma de suas condições de cansaço",
 	imagem":"https://i0.wp.com/beneaththetangles.com/wp-content/uploads/2022/09/uwp826573.gif"
@@ -124,6 +112,67 @@ um pescado (peixe, crustáceo, molusco etc.). Para cada 10 que excede a CD, um p
 	imagem":"https://pa1.aminoapps.com/6698/c05c82e7f98a99cbf8151f265f39dc645e11de46_00.gif"
     }
 ];
+
+
+const objetivos = [
+    { 
+        nome: "Caça", 
+        descricao: "Abater uma criatura particularmente perigosa na masmorra e trazê-la para Candeh’ssa. Role a tabela de encontros da próxima masmorra para determinar a criatura; ela recebe um bônus de +2 em testes de perícia e na Defesa." 
+    },
+    { 
+        nome: "Entrega", 
+        descricao: "Deixar um item em uma câmara numerada específica da masmorra (que pode ou não estar sendo protegida por uma criatura). Qualquer que seja a natureza do item, ele ocupa 2d4 espaços e retorna automaticamente para a cidade se a masmorra não é concluída (o que significa que a missão falha)." 
+    },
+    { 
+        nome: "Escolta", 
+        descricao: "Um dos NPCs do estabelecimento precisa entrar em uma masmorra. Ele atua como um parceiro iniciante que não fornece benefícios, é vulnerável e precisa percorrer a masmorra com o grupo, do início ao fim. Se morrer, a missão falha e o NPC não estará mais disponível."
+    },
+    { 
+        nome: "Manufatura", 
+        descricao: "Fabricar um item específico, que só pode ser produzido em determinado local da masmorra. Para fabricar o item, os personagens precisam gastar 1 dia e matérias-primas especiais (fornecidas pelo solicitante) que ocupam 1d3 espaços, e passar em um teste de Ofício (CD 15 + nível da masmorra)." 
+    },
+    { 
+        nome: "Pesquisa", 
+        descricao: "Os aventureiros devem registrar algum fenômeno ou aparição em uma câmara numerada específica da masmorra. Isso é um teste estendido (CD 15 + nível da masmorra, 3 sucessos) de Conhecimento, Investigação ou Sobrevivência (conforme a natureza da pesquisa), em que cada teste representa 1 hora. Em uma falha total, a pesquisa resulta em um acidente perigoso; os pontos de vida máximos de cada personagem diminuem em 1 por nível de personagem até a conclusão da próxima masmorra."
+    },
+    { 
+        nome: "Recuperação", 
+        descricao: "Resgatar um item em uma masmorra. O item estará em uma das câmaras numeradas, ocupa 2d4 espaços e, uma vez recuperado, atrai a atenção das criaturas locais: elas recebem +2 em testes de ataque contra os personagens."
+    },
+    { 
+        nome: "Resgate", 
+        descricao: "Um habitante precisa ser resgatado da masmorra. Ele está em uma das câmaras numeradas. Uma vez resgatado, ele atua como descrito em Escolta, mas sua presença atiça as ameaças da masmorra; essas criaturas recebem +2 em rolagens de dano contra os aventureiros."
+    },
+    { 
+        nome: "Ritual", 
+        descricao: "Executar um ritual numa câmara numerada específica da masmorra. Isso é um teste estendido (CD 15 + nível da masmorra, 3 sucessos) de Misticismo ou Religião (conforme a natureza do ritual), em que cada teste representa 1 hora. Em uma falha total, o ritual resulta em um desastre sobrenatural; os pontos de mana máximos de cada personagem diminuem em 1 por nível de personagem até a conclusão da próxima masmorra."
+    }
+];
+
+
+const recompensas = [
+    { 
+        nome: "Afinidade", 
+        descricao: "Você recebe 1d4 pontos de afinidade com um habitante, à sua escolha, do estabelecimento solicitante. Esta recompensa só pode ser recebida uma vez para cada habitante." 
+    },
+    { 
+        nome: "Favor", 
+        descricao: "Você recebe um favor de um habitante do estabelecimento solicitante. Pode ser um uso adicional da honraria (nesse caso, dois personagens podem se beneficiar ou a honraria não conta no limite de um personagem). Ou a ajuda do habitante, atuando como um parceiro na próxima masmorra. Ou outro favor a sua escolha, aprovado pelo mestre e que faça sentido com a personalidade e serviços do NPC."
+    },
+    { 
+        nome: "Informação", 
+        descricao: "Você recebe uma informação útil, como uma dica para se aproximar de um NPC, o Agrado dos Deuses de uma das próximas masmorras, ou uma dica importante sobre perigos e desafios futuros. Você decide a informação, mas o mestre deve aprová-la." 
+    },
+    { 
+        nome: "Poder", 
+        descricao: "Você recebe um benefício de treinamento, definido aleatoriamente, que dura até o fim da próxima masmorra." 
+    },
+    { 
+        nome: "Tesouro", 
+        descricao: "Você ganha um bem material. Role na tabela Tesouros (Tormenta20, p. 328), na coluna de riquezas, de itens ou em ambas, na linha correspondente a seu nível." 
+    }
+];
+
 
 // Lista de objetivos possíveis
 const objetivos = [
