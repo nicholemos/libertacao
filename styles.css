@@ -1,214 +1,177 @@
+/* Estilos básicos para o corpo */
 body {
-    background-image: url('https://jamboeditora.com.br/wp-content/uploads/2024/12/Pagina_de_produto-capa-provisoria-Libertacao.png');
-    background-size: cover;
-    background-position: center;
-    color: white;
     font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Sobreposição para melhorar visibilidade do texto */
-}
-
-.container {
-    position: relative;
-    z-index: 1;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Estilo para o título */
+h1 {
     text-align: center;
-    flex-direction: column;
-    margin-top: 50px; /* Garantir que o conteúdo tenha um espaçamento adequado */
+    font-size: 3em;
+    color: #4caf50;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
 }
 
-/* Estilo de título */
-.title {
-    font-size: 3rem;
-    font-weight: bold;
-}
-
-/* Descrição do conteúdo */
-.description {
-    font-size: 1.2rem;
+/* Container dos resultados das missões */
+#resultados {
     margin-top: 20px;
-    max-width: 800px;
-}
-
-/* Seletor de abas */
-.tabs {
     display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.tab-button {
-    background-color: #333;
-    color: white;
-    border: 1px solid #444;
-    padding: 15px 30px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.tab-button:hover {
-    background-color: #444;
-}
-
-.tab-button.active {
-    background-color: #444;
-    color: #ddd;
-}
-
-/* Estilo das cartas */
-.card-item {
-    background: #333333;
-    border: 2px solid #444;
-    border-radius: 15px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
     padding: 20px;
-    max-width: 350px;
-    margin: 0 auto;
-    cursor: pointer;
-    transition: transform 0.3s ease;
 }
 
-.card-item:hover {
+/* Estilos básicos para a missão */
+.resultado-box {
+    border: 2px solid #ddd;
+    padding: 15px;
+    border-radius: 12px;
+    background-color: #fff;
+    width: calc(33.33% - 20px);
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.resultado-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: #f9f9f9; /* Fundo de destaque ao passar o mouse */
+}
+
+/* Para garantir que as missões se ajustem de forma responsiva */
+@media (max-width: 768px) {
+    .resultado-box {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .resultado-box {
+        width: 100%;
+    }
+}
+
+/* Estilo para os botões (tanto sucesso quanto falha) */
+.missao-status button {
+    padding: 8px 16px;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.missao-status button:hover {
+    transform: scale(1.1);
+}
+
+/* Cores dos botões */
+.sucesso {
+    background-color: #28a745;
+    color: white;
+}
+
+.falha {
+    background-color: #dc3545;
+    color: white;
+}
+
+.falha:hover {
+    background-color: #c82333;
+}
+
+/* Estilo das tooltips */
+.tooltip {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.tooltip-box {
+    position: absolute;
+    background-color: rgba(0, 0, 0, .75);
+    color: #fff;
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+    font-size: 16px;
+    z-index: 9999;
+    display: none;
+}
+
+.tooltip-box strong {
+    color: #ffcc00;
+}
+
+.tooltip-box img {
+    width: auto;
+    height: auto;
+    margin-top: 10px;
+}
+
+/* Estilos da lista de missões completadas */
+#lista-missoes {
+    margin-top: 20px;
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+.sucesso-item,
+.falha-item {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.sucesso-item {
+    color: green;
+}
+
+.falha-item {
+    color: red;
+}
+
+/* Estilo para o botão Gerar Missão */
+button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-bottom: 20px;
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button:hover {
+    background-color: #45a049;
     transform: scale(1.05);
 }
 
-.item-title {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-top: 10px;
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.8);
 }
 
-.item-image {
-    width: 200px;
-    height: 200px;
-    object-fit: contain;
-    margin-bottom: 20px;
-}
-
-.item-description {
-    display: none;
-    font-size: 1rem;
-    margin-top: 20px;
-    text-align: left;
-}
-
-.reveal-button {
-    margin-top: 20px;
-    font-size: 1.1rem;
-    color: #ccc;
-    background-color: #444;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.reveal-button:hover {
-    background-color: #666;
-}
-
-/* Estilos para o conteúdo das abas */
-.tab-content {
-    margin-top: 30px;
-}
-
-.tab-pane {
-    display: none;
-}
-
-.tab-pane.active {
-    display: block;
-}
-
-.tab-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.adventure-description {
-    font-size: 1.2rem;
-    margin-top: 20px;
-}
-
-/* Estilo para a caixa expansível */
-.expandable-box {
-    margin-top: 20px;
-}
-
-.expand-btn {
-    background-color: #444;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1rem;
-    width: 100%;
-    text-align: left;
-    transition: background-color 0.3s;
-}
-
-.expand-btn:hover {
-    background-color: #555;
-}
-
-.scene-content {
-    display: none;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #333;
-    border: 1px solid #444;
-}
-
-.question-box {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #444;
-    border-radius: 5px;
-}
-
-.question-box p {
-    margin: 5px 0;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    .title {
-        font-size: 2rem;
-    }
-
-    .description {
-        font-size: 1rem;
-    }
-
-    .tab-title {
-        font-size: 1.8rem;
-    }
-
-    .adventure-description {
-        font-size: 1rem;
-    }
-
-    .tab-button {
-        font-size: 1rem;
-        padding: 10px 20px;
-    }
-
-    select {
-        width: 200px;
-        font-size: 1rem;
-    }
+/* Estilo para imagens dentro das caixas de missão */
+.tooltip-box img {
+    width: 200%;
+    height: auto;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
