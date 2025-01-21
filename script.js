@@ -159,13 +159,16 @@ const recompensas = [
     { 
         nome: "Tesouro", 
         descricao: "Você ganha um bem material. Role na tabela Tesouros (Tormenta20, p. 328), na coluna de riquezas, de itens ou em ambas, na linha correspondente a seu nível." 
+    },
+    { 
+        nome: "Tesouro", 
+        descricao: "Você ganha um bem material. Role na tabela Tesouros (Tormenta20, p. 328), na coluna de riquezas, de itens ou em ambas, na linha correspondente a seu nível." 
     }
 ];
 
 
 let numeroMissao = 1; // Número das missões que serão geradas
 
-// Função para gerar uma nova missão
 // Função para gerar uma nova missão
 function gerarAventura() {
     const resultadosContainer = document.getElementById("resultados");
