@@ -380,6 +380,29 @@ function loadData(event) {
     event.target.value = '';
 }
 
+
+const container = document.getElementById("solicitantesContainer");
+
+solicitantes.forEach(s => {
+  const card = document.createElement("div");
+  card.className = "col-md-6 col-lg-4";
+
+  card.innerHTML = `
+    <div class="card h-100 shadow">
+      <img src="${s.imagem}" class="card-img-top" alt="${s.nome}">
+      <div class="card-body">
+        <h5 class="card-title">${s.nome}</h5>
+        <p class="card-text"><strong>Descrição:</strong> ${s.descricao}</p>
+        <p class="card-text"><strong>Serviços:</strong> ${s.servicos}</p>
+        <p class="card-text"><strong>Honrarias:</strong> ${s.honrarias}</p>
+      </div>
+    </div>
+  `;
+  
+  container.appendChild(card);
+});
+
+
 // Eventos de salvar e carregar
 document.getElementById('saveData').addEventListener('click', saveData);
 document.getElementById('loadData').addEventListener('change', loadData);
