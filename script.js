@@ -171,238 +171,280 @@ const recompensas = [
     }
 ];
 
-let numeroMissao = 1; // Número das missões que serão geradas
+// Arrays solicitantes, objetivos e recompensas declarados acima
+let numeroMissao = 1; // Número das missões geradas
+const honrariasLiberadas = new Set();
 
-// Função para gerar uma nova missão
-function gerarAventura() {
-    const resultadosContainer = document.getElementById("resultados");
-
-    // Verificando se já existem 4 missões
-    if (resultadosContainer.children.length >= 4) {
-        alert("Você já tem 4 missões. Complete algumas antes de criar mais.");
-        return; // Não cria novas missões se o limite for alcançado
-    }
-
-    // Seleção aleatória de um solicitante
-    const solicitante = solicitantes[Math.floor(Math.random() * solicitantes.length)];
-
-    // Seleção aleatória de um objetivo
-    const objetivo = objetivos[Math.floor(Math.random() * objetivos.length)];
-
-    // Seleção aleatória de uma recompensa
-    const recompensa = recompensas[Math.floor(Math.random() * recompensas.length)];
-
-    // Criando a nova caixa de missão
-    const resultadoBox = document.createElement("div");
-    resultadoBox.classList.add("resultado-box");
-
-    // Adicionando o conteúdo da missão
-    resultadoBox.innerHTML = `
-       <h3>Aventura Gerada:</h3>
-       <p><strong>Solicitante:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('solicitante', '${solicitante.nome}')" onmouseout="ocultarDetalhes()"> ${solicitante.nome} </span></p>
-       <p><strong>Objetivo:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('objetivo', '${objetivo.nome}')" onmouseout="ocultarDetalhes()"> ${objetivo.nome} </span></p>
-       <p><strong>Recompensa:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('recompensa', '${recompensa.nome}')" onmouseout="ocultarDetalhes()"> ${recompensa.nome} </span></p>
-       
-       <div class="missao-status">
-           <button class="sucesso" onclick="marcarStatus(this, 'sucesso', ${numeroMissao}, '${solicitante.nome}', '${recompensa.nome}')">O</button>
-           <button class="falha" onclick="marcarStatus(this, 'falha', ${numeroMissao}, '${solicitante.nome}', '${recompensa.nome}')">X</button>
-       </div>
-   `;
-
-    // Adicionando a nova missão ao container de resultados
-    resultadosContainer.appendChild(resultadoBox);
-
-    // Incrementa o número da missão para a próxima
-    numeroMissao++;
+// Inicializa UI (filtros e cards)
+function initUI() {
+  initFilter();
+  initSolicitantes();
 }
 
-// Função para mostrar detalhes no hover
-function mostrarDetalhes(tipo, nome) {
-    let detalhes = '';
-    let titulo = '';
-    let imagem = '';
+// Cria dropdown de filtro de solicitantes para missões e cards
+function initFilter() {
+  const container = document.querySelector('.container');
+  const filterDiv = document.createElement('div');
+  filterDiv.style.margin = '20px 0';
+  filterDiv.innerHTML = `
+    <label for="filtroSolicitante"><strong>Filtrar Por Solicitante:</strong></label>
+    <select id="filtroSolicitante" style="margin-left:8px; padding:4px">
+      <option value="Todos">Todos</option>
+    </select>
+  `;
+  container.insertBefore(filterDiv, document.getElementById('resultados'));
 
-    if (tipo === 'solicitante') {
-        const solicitante = solicitantes.find(s => s.nome === nome);
-        if (solicitante) {
-            titulo = "Nome: " + solicitante.nome;
-            detalhes = `
-               <p><strong>Descrição:</strong> ${solicitante.descricao}</p>
-               <p><strong>Serviço:</strong> ${solicitante.servicos}</p>
-               <p><strong>Honrarias:</strong> ${solicitante.honrarias}</p>
-           `;
-            imagem = `<img src="${solicitante.imagem}" alt="${solicitante.nome}" style="width: 100px; height: auto; margin-top: 10px;">`;
-        }
-    } else if (tipo === 'objetivo') {
-        const objetivo = objetivos.find(o => o.nome === nome);
-        if (objetivo) {
-            titulo = "Nome: " + objetivo.nome;
-            detalhes = `<p><strong>Descrição:</strong> ${objetivo.descricao}</p>`;
-        }
-    } else if (tipo === 'recompensa') {
-        const recompensa = recompensas.find(r => r.nome === nome);
-        if (recompensa) {
-            titulo = "Nome: " + recompensa.nome;
-            detalhes = recompensa.descricao;
-        }
-    }
-
-    // Cria a tooltip com a imagem do solicitante (se for o tipo 'solicitante') ou objetivo
-    const tooltip = document.createElement('div');
-    tooltip.classList.add('tooltip-box');
-    tooltip.innerHTML = `
-       <strong>${titulo}</strong>
-       ${imagem}
-       <p>${detalhes}</p>
-   `;
-
-    // Adiciona a tooltip ao corpo do documento
-    document.body.appendChild(tooltip);
-
-    // Posiciona a tooltip ao lado do mouse
-    tooltip.style.left = `${event.pageX + 10}px`;
-    tooltip.style.top = `${event.pageY + 10}px`;
-
-    // Exibe a tooltip
-    tooltip.style.display = 'block';
+  const select = document.getElementById('filtroSolicitante');
+  solicitantes.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.nome;
+    opt.textContent = s.nome;
+    select.appendChild(opt);
+  });
+  select.addEventListener('change', applyFilter);
 }
 
-// Função para ocultar o tooltip
-function ocultarDetalhes() {
-    const tooltip = document.querySelector('.tooltip-box');
-    if (tooltip) {
-        tooltip.remove();
-    }
+// Aplica filtro em missões pendentes, completadas e cards de solicitantes
+function applyFilter() {
+  const sel = document.getElementById('filtroSolicitante').value;
+  // Filtra missões pendentes
+  document.querySelectorAll('#resultados .resultado-box').forEach(box => {
+    box.style.display = (sel === 'Todos' || box.dataset.solicitante === sel) ? '' : 'none';
+  });
+  // Filtra missões completadas
+  document.querySelectorAll('#lista-missoes li').forEach(li => {
+    const match = li.textContent.match(/Solicitante: ([^-]+)/);
+    const sol = match ? match[1].trim() : '';
+    li.style.display = (sel === 'Todos' || sol === sel) ? '' : 'none';
+  });
+  // Filtra cards de solicitantes
+  document.querySelectorAll('#solicitantesContainer > div').forEach(cardDiv => {
+    const title = cardDiv.querySelector('.card-title').innerText;
+    cardDiv.style.display = (sel === 'Todos' || title === sel) ? '' : 'none';
+  });
 }
 
-// Função para marcar a missão como sucesso ou falha, e removê-la
-function marcarStatus(botao, status, numMissao, solicitante, recompensa) {
-    const box = botao.closest(".resultado-box"); // Encontra a caixa da missão
-    const botoes = box.querySelectorAll(".missao-status button");
-
-    // Desabilita os botões depois de clicar
-    botoes.forEach(b => b.disabled = true);
-
-    // Se a missão foi falha, a recompensa será "Nenhuma"
-    if (status === 'falha') {
-        recompensa = "Nenhuma";
-        box.style.borderColor = "#dc3545"; // Vermelho para falha
-    } else {
-        box.style.borderColor = "#28a745"; // Verde para sucesso
-    }
-
-    // Adiciona a missão ao registro de missões completadas
-    const registroLista = document.getElementById("lista-missoes");
-    const itemRegistro = document.createElement("li");
-    itemRegistro.classList.add(status === 'sucesso' ? 'sucesso-item' : 'falha-item');
-    itemRegistro.textContent = `Missão #${numMissao} - ${status.charAt(0).toUpperCase() + status.slice(1)} - Solicitante: ${solicitante} - Recompensa: ${recompensa}`;
-
-    registroLista.appendChild(itemRegistro);
-
-    // Remove a missão após o clique
-    setTimeout(() => {
-        box.remove();
-    }, 1000); // A missão desaparece com um pequeno delay (1 segundo)
-}
-
-// Função para salvar dados em TXT
-function saveData() {
-    let texto = "# Pendentes\n";
-    document.querySelectorAll('.resultado-box').forEach(box => {
-        const num = box.dataset.numMissao;
-        const solicitante = box.dataset.solicitante;
-        const objetivo = box.dataset.objetivo;
-        const recompensa = box.dataset.recompensa;
-        texto += `${num}|${solicitante}|${objetivo}|${recompensa}\n`;
-    });
-
-    texto += "\n# Completadas\n";
-    document.querySelectorAll('#lista-missoes li').forEach(li => {
-        texto += li.textContent + "\n";
-    });
-
-    const blob = new Blob([texto], { type: 'text/plain' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'aventuras_dados.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-// Função para carregar dados de um arquivo TXT
-function loadData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = e => {
-        const linhas = e.target.result.split("\n");
-        let secao = "";
-        document.getElementById('resultados').innerHTML = '';
-        document.getElementById('lista-missoes').innerHTML = '';
-        numeroMissao = 1;
-
-        linhas.forEach(linha => {
-            linha = linha.trim();
-            if (linha === "# Pendentes") {
-                secao = "pendentes";
-            } else if (linha === "# Completadas") {
-                secao = "completadas";
-            } else if (linha && secao === "pendentes") {
-                const [num, solicitante, objetivo, recompensa] = linha.split("|");
-                const box = document.createElement("div");
-                box.classList.add("resultado-box");
-                box.dataset.numMissao = num;
-                box.dataset.solicitante = solicitante;
-                box.dataset.objetivo = objetivo;
-                box.dataset.recompensa = recompensa;
-                box.innerHTML = `
-                    <h3>Aventura Gerada:</h3>
-                    <p><strong>Solicitante:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('solicitante','${solicitante}')" onmouseout="ocultarDetalhes()"> ${solicitante} </span></p>
-                    <p><strong>Objetivo:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('objetivo','${objetivo}')" onmouseout="ocultarDetalhes()"> ${objetivo} </span></p>
-                    <p><strong>Recompensa:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('recompensa','${recompensa}')" onmouseout="ocultarDetalhes()"> ${recompensa} </span></p>
-                    <div class="missao-status">
-                        <button class="sucesso" onclick="marcarStatus(this, 'sucesso')">O</button>
-                        <button class="falha" onclick="marcarStatus(this, 'falha')">X</button>
-                    </div>
-                `;
-                document.getElementById('resultados').appendChild(box);
-                numeroMissao = Math.max(numeroMissao, parseInt(num) + 1);
-            } else if (linha && secao === "completadas") {
-                const li = document.createElement("li");
-                li.textContent = linha;
-                document.getElementById('lista-missoes').appendChild(li);
-            }
-        });
-    };
-    reader.readAsText(file);
-    event.target.value = '';
-}
-
-
-const container = document.getElementById("solicitantesContainer");
-
-solicitantes.forEach(s => {
-  const card = document.createElement("div");
-  card.className = "col-md-6 col-lg-4";
-
-  card.innerHTML = `
-    <div class="card h-100 shadow">
-      <img src="${s.imagem}" class="card-img-top" alt="${s.nome}">
-      <div class="card-body">
-        <h5 class="card-title">${s.nome}</h5>
-        <p class="card-text"><strong>Descrição:</strong> ${s.descricao}</p>
-        <p class="card-text"><strong>Serviços:</strong> ${s.servicos}</p>
-        <p class="card-text"><strong>Honrarias:</strong> ${s.honrarias}</p>
+// Inicializa cards de solicitantes com honrarias ocultas
+function initSolicitantes() {
+  const container = document.getElementById('solicitantesContainer');
+  solicitantes.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'col-md-6 col-lg-4';
+    card.innerHTML = `
+      <div class="card h-100 shadow">
+        <img src="${s.imagem}" class="card-img-top" alt="${s.nome}">
+        <div class="card-body">
+          <h5 class="card-title">${s.nome}</h5>
+          <p class="card-text"><strong>Descrição:</strong> ${s.descricao}</p>
+          <p class="card-text"><strong>Serviços:</strong> ${s.servicos}</p>
+          <p class="card-text honrarias" style="display:none"><strong>Honrarias:</strong> ${s.honrarias}</p>
+        </div>
       </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Função para ordenar a lista de missões completadas por número
+function sortCompletedList() {
+  const ul = document.getElementById('lista-missoes');
+  Array.from(ul.children)
+    .sort((a, b) => {
+      const numA = parseInt(a.textContent.match(/^Missão #(\d+)/)[1], 10);
+      const numB = parseInt(b.textContent.match(/^Missão #(\d+)/)[1], 10);
+      return numA - numB;
+    })
+    .forEach(li => ul.appendChild(li));
+}
+
+// Gera uma nova missão
+function gerarAventura() {
+  const resultadosContainer = document.getElementById("resultados");
+  if (resultadosContainer.children.length >= 4) {
+    alert("Você já tem 4 missões. Complete algumas antes de criar mais.");
+    return;
+  }
+  const solicitante = solicitantes[Math.floor(Math.random() * solicitantes.length)];
+  const objetivo = objetivos[Math.floor(Math.random() * objetivos.length)];
+  const recompensa = recompensas[Math.floor(Math.random() * recompensas.length)];
+
+  const box = document.createElement("div");
+  box.classList.add("resultado-box");
+  box.dataset.numMissao = numeroMissao;
+  box.dataset.solicitante = solicitante.nome;
+  box.dataset.objetivo = objetivo.nome;
+  box.dataset.recompensa = recompensa.nome;
+
+  box.innerHTML = `
+    <h3>Missão #${numeroMissao}</h3>
+    <p><strong>Solicitante:</strong> ${solicitante.nome}</p>
+    <p><strong>Objetivo:</strong> <span class="clickable" onclick="mostrarDetalhes('objetivo','${objetivo.nome}')">${objetivo.nome}</span></p>
+    <p><strong>Recompensa:</strong> <span class="clickable" onclick="mostrarDetalhes('recompensa','${recompensa.nome}')">${recompensa.nome}</span></p>
+    <div class="missao-status">
+      <button onclick="marcarStatus(this, 'sucesso')">O</button>
+      <button onclick="marcarStatus(this, 'falha')" style="background-color: red; color: white;">X</button>
     </div>
   `;
-  
-  container.appendChild(card);
+  resultadosContainer.appendChild(box);
+  numeroMissao++;
+}
+
+// Marca sucesso ou falha e atualiza honrarias
+function marcarStatus(botao, status) {
+  const box = botao.closest(".resultado-box");
+  const num = box.dataset.numMissao;
+  const sol = box.dataset.solicitante;
+  let rec = box.dataset.recompensa;
+
+  // Desabilita botões
+  box.querySelectorAll(".missao-status button").forEach(b => b.disabled = true);
+
+  if (status === 'falha') {
+    rec = 'Nenhuma';
+    box.style.borderColor = '#dc3545';
+    box.dataset.recompensa = rec;
+  } else {
+    box.style.borderColor = '#28a745';
+    if (!honrariasLiberadas.has(sol)) {
+      honrariasLiberadas.add(sol);
+      revelarHonrarias(sol);
+    }
+  }
+
+  // Registra missão completada com clique em recompensa
+  const li = document.createElement('li');
+  li.innerHTML = `Missão #${num} - ${status[0].toUpperCase() + status.slice(1)} - Solicitante: ${sol} - Recompensa: <span class="clickable" onclick="mostrarDetalhes('recompensa','${rec}')">${rec}</span>`;
+  li.style.color = status === 'sucesso' ? 'green' : 'red';
+  document.getElementById('lista-missoes').appendChild(li);
+  sortCompletedList();
+
+  setTimeout(() => box.remove(), 1000);
+}
+
+// Exibe honrarias nos cards de solicitantes
+function revelarHonrarias(nomeSolicitante) {
+  document.querySelectorAll('.card').forEach(card => {
+    const title = card.querySelector('.card-title').innerText;
+    if (title === nomeSolicitante) {
+      const honElem = card.querySelector('.card-text.honrarias');
+      if (honElem) honElem.style.display = 'block';
+    }
+  });
+}
+
+// Exibe detalhes de objetivo ou recompensa em modal
+function mostrarDetalhes(tipo, nome) {
+  let descricao = '';
+  if (tipo === 'objetivo') {
+    descricao = objetivos.find(o => o.nome === nome)?.descricao || '';
+  } else if (tipo === 'recompensa') {
+    descricao = recompensas.find(r => r.nome === nome)?.descricao || '';
+  }
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <h4>${tipo === 'objetivo' ? 'Objetivo' : 'Recompensa'}: ${nome}</h4>
+      <p>${descricao}</p>
+      <button onclick="this.closest('.modal-overlay').remove()">Fechar</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+// Salva em TXT
+function saveData() {
+  let texto = "# Pendentes\n";
+  document.querySelectorAll('.resultado-box').forEach(box => {
+    texto += `${box.dataset.numMissao}|${box.dataset.solicitante}|${box.dataset.objetivo}|${box.dataset.recompensa}\n`;
+  });
+  texto += "\n# Completadas\n";
+  document.querySelectorAll('#lista-missoes li').forEach(li => texto += li.innerText + '\n');
+
+  const blob = new Blob([texto], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'aventuras_dados.txt';
+  a.click();
+}
+
+// Carrega de TXT e reaplica honrarias
+function loadData(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = e.target.result.split("\n");
+    let section = '';
+    const pendentes = [];
+    const completadas = [];
+    let maxNum = 0;
+
+    lines.forEach(raw => {
+      const line = raw.trim();
+      if (line === '# Pendentes') section = 'pendentes';
+      else if (line === '# Completadas') section = 'completadas';
+      else if (line) {
+        if (section === 'pendentes') {
+          pendentes.push(line);
+          maxNum = Math.max(maxNum, parseInt(line.split('|')[0]));
+        } else if (section === 'completadas') {
+          const match = line.match(/Missão #(\d+)/);
+          const num = match ? parseInt(match[1]) : 0;
+          completadas.push({ line, num });
+          maxNum = Math.max(maxNum, num);
+        }
+      }
+    });
+
+    document.getElementById('resultados').innerHTML = '';
+    document.getElementById('lista-missoes').innerHTML = '';
+    honrariasLiberadas.clear();
+
+    pendentes.forEach(entry => {
+      const [num, sol, obj, rec] = entry.split('|');
+      const box = document.createElement('div');
+      box.classList.add('resultado-box');
+      box.dataset.numMissao = num;
+      box.dataset.solicitante = sol;
+      box.dataset.objetivo = obj;
+      box.dataset.recompensa = rec;
+      box.innerHTML = `
+        <h3>Missão #${num}</h3>
+        <p><strong>Solicitante:</strong> ${sol}</p>
+        <p><strong>Objetivo:</strong> <span class="clickable" onclick="mostrarDetalhes('objetivo','${obj}')">${obj}</span></p>
+        <p><strong>Recompensa:</strong> <span class="clickable" onclick="mostrarDetalhes('recompensa','${rec}')">${rec}</span></p>
+        <div class="missao-status">
+          <button onclick="marcarStatus(this, 'sucesso')">O</button>
+          <button onclick="marcarStatus(this, 'falha')" style="background-color: red; color: white;">X</button>
+        </div>
+      `;
+      document.getElementById('resultados').appendChild(box);
+    });
+
+    completadas.sort((a, b) => a.num - b.num).forEach(({ line, num }) => {
+      const status = line.toLowerCase().includes('sucesso') ? 'sucesso' : 'falha';
+      const recMatch = line.match(/Recompensa: (.+)$/);
+      const rec = recMatch ? recMatch[1] : '';
+      const li = document.createElement('li');
+      li.innerHTML = line.replace(/Recompensa: (.+)$/, `Recompensa: <span class="clickable" onclick="mostrarDetalhes('recompensa','${rec}')">${rec}</span>`);
+      li.style.color = status === 'sucesso' ? 'green' : 'red';
+      document.getElementById('lista-missoes').appendChild(li);
+      if (status === 'sucesso') {
+        const solMatch = line.match(/Solicitante: ([^-]+)/);
+        if (solMatch) honrariasLiberadas.add(solMatch[1].trim());
+      }
+    });
+
+    numeroMissao = maxNum + 1;
+    honrariasLiberadas.forEach(nome => revelarHonrarias(nome));
+    sortCompletedList();
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initUI();  // chama initFilter + initSolicitantes
+  document.getElementById('saveData').addEventListener('click', saveData);
+  document.getElementById('loadData').addEventListener('change', loadData);
 });
-
-
-// Eventos de salvar e carregar
-document.getElementById('saveData').addEventListener('click', saveData);
-document.getElementById('loadData').addEventListener('change', loadData);
