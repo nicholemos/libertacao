@@ -11,13 +11,17 @@
 
   <div class="container my-4">
     <h1 class="text-center mb-4">Aventuras Sem Fim</h1>
+
     <div class="text-center mb-4">
       <button onclick="gerarAventura()" class="btn btn-primary me-2">Gerar Missão</button>
       <button id="saveData" class="btn btn-success me-2">Salvar TXT</button>
-      <input type="file" id="loadData" accept=".txt" class="btn btn-outline-secondary">
+
+      <!-- Label estilizado para carregar TXT -->
+      <label for="loadData" class="btn btn-outline-secondary me-2">Carregar TXT</label>
+      <input type="file" id="loadData" accept=".txt" style="display: none;">
     </div>
 
-    <div id="resultados" class="mb-5"></div>
+    <div id="resultados"></div>
 
     <h3>Missões Completadas:</h3>
     <ul id="lista-missoes" class="list-group mb-5"></ul>
