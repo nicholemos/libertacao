@@ -11,8 +11,9 @@
     <button onclick="gerarAventura()">Gerar Missão</button>
     <!-- Botões de salvar e carregar dados -->
     <div class="save-load">
-      <button id="saveData">Salvar Dados</button>
-      <input type="file" id="loadData" accept=".json">
+      <button onclick="salvarTXT()">Salvar em TXT</button>
+        <input type="file" accept=".txt" onchange="carregarTXT(event)" />
+
     </div>
     
     <div id="resultados"></div>
