@@ -198,3 +198,57 @@ button:focus {
 .custom-file-upload:hover {
     background-color: #2980b9;
 }
+
+/* Esconde o input file real */
+#loadData {
+  display: none;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding-bottom: 40px;
+}
+
+h1, h2, h3 {
+  font-weight: bold;
+  color: #333;
+}
+
+#resultados {
+  padding: 15px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+#lista-missoes {
+  padding-left: 0;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+
+.clickable {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Modal básico */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%; width: 400px;
+}
