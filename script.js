@@ -239,78 +239,75 @@ function marcarStatus(botao, status) {
 function mostrarDetalhes(tipo, nome) { /* ... igual ao código anterior ... */ }
 function ocultarDetalhes() { /* ... igual ao código anterior ... */ }
 
-// Função para salvar dados em JSON
+// Função para salvar dados em TXT
 function saveData() {
-    const dados = {
-        pendentes: [],
-        completadas: []
-    };
-
-    // Missões pendentes
+    let texto = "# Pendentes\n";
     document.querySelectorAll('.resultado-box').forEach(box => {
-        dados.pendentes.push({
-            numMissao: box.dataset.numMissao,
-            solicitante: box.dataset.solicitante,
-            objetivo: box.dataset.objetivo,
-            recompensa: box.dataset.recompensa
-        });
+        const num = box.dataset.numMissao;
+        const solicitante = box.dataset.solicitante;
+        const objetivo = box.dataset.objetivo;
+        const recompensa = box.dataset.recompensa;
+        texto += `${num}|${solicitante}|${objetivo}|${recompensa}\n`;
     });
 
-    // Missões completadas
+    texto += "\n# Completadas\n";
     document.querySelectorAll('#lista-missoes li').forEach(li => {
-        dados.completadas.push(li.textContent);
+        texto += li.textContent + "\n";
     });
 
-    const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+    const blob = new Blob([texto], { type: 'text/plain' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'aventuras_dados.json';
+    a.download = 'aventuras_dados.txt';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 }
 
-// Função para carregar dados
+// Função para carregar dados de um arquivo TXT
 function loadData(event) {
     const file = event.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = e => {
-        const dados = JSON.parse(e.target.result);
-        // Limpa estado atual
+        const linhas = e.target.result.split("\n");
+        let secao = "";
         document.getElementById('resultados').innerHTML = '';
         document.getElementById('lista-missoes').innerHTML = '';
         numeroMissao = 1;
 
-        // Carrega pendentes
-        dados.pendentes.forEach(item => {
-            // recria a box
-            const box = document.createElement('div');
-            box.classList.add('resultado-box');
-            box.dataset.numMissao = item.numMissao;
-            box.dataset.solicitante = item.solicitante;
-            box.dataset.objetivo = item.objetivo;
-            box.dataset.recompensa = item.recompensa;
-            box.innerHTML = `
-                <h3>Aventura Gerada:</h3>
-                <p><strong>Solicitante:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('solicitante','${item.solicitante}')" onmouseout="ocultarDetalhes()"> ${item.solicitante} </span></p>
-                <p><strong>Objetivo:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('objetivo','${item.objetivo}')" onmouseout="ocultarDetalhes()"> ${item.objetivo} </span></p>
-                <p><strong>Recompensa:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('recompensa','${item.recompensa}')" onmouseout="ocultarDetalhes()"> ${item.recompensa} </span></p>
-                <div class="missao-status">
-                    <button class="sucesso" onclick="marcarStatus(this, 'sucesso')">O</button>
-                    <button class="falha" onclick="marcarStatus(this, 'falha')">X</button>
-                </div>
-            `;
-            document.getElementById('resultados').appendChild(box);
-            numeroMissao = Math.max(numeroMissao, parseInt(item.numMissao) + 1);
-        });
-
-        // Carrega completadas
-        const lista = document.getElementById('lista-missoes');
-        dados.completadas.forEach(texto => {
-            const li = document.createElement('li');
-            li.textContent = texto;
-            lista.appendChild(li);
+        linhas.forEach(linha => {
+            linha = linha.trim();
+            if (linha === "# Pendentes") {
+                secao = "pendentes";
+            } else if (linha === "# Completadas") {
+                secao = "completadas";
+            } else if (linha && secao === "pendentes") {
+                const [num, solicitante, objetivo, recompensa] = linha.split("|");
+                const box = document.createElement("div");
+                box.classList.add("resultado-box");
+                box.dataset.numMissao = num;
+                box.dataset.solicitante = solicitante;
+                box.dataset.objetivo = objetivo;
+                box.dataset.recompensa = recompensa;
+                box.innerHTML = `
+                    <h3>Aventura Gerada:</h3>
+                    <p><strong>Solicitante:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('solicitante','${solicitante}')" onmouseout="ocultarDetalhes()"> ${solicitante} </span></p>
+                    <p><strong>Objetivo:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('objetivo','${objetivo}')" onmouseout="ocultarDetalhes()"> ${objetivo} </span></p>
+                    <p><strong>Recompensa:</strong> <span class="tooltip" onmouseover="mostrarDetalhes('recompensa','${recompensa}')" onmouseout="ocultarDetalhes()"> ${recompensa} </span></p>
+                    <div class="missao-status">
+                        <button class="sucesso" onclick="marcarStatus(this, 'sucesso')">O</button>
+                        <button class="falha" onclick="marcarStatus(this, 'falha')">X</button>
+                    </div>
+                `;
+                document.getElementById('resultados').appendChild(box);
+                numeroMissao = Math.max(numeroMissao, parseInt(num) + 1);
+            } else if (linha && secao === "completadas") {
+                const li = document.createElement("li");
+                li.textContent = linha;
+                document.getElementById('lista-missoes').appendChild(li);
+            }
         });
     };
     reader.readAsText(file);
