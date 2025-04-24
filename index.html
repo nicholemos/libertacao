@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aventuras Sem Fim</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aventuras Sem Fim</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Aventuras Sem Fim</h1>
-    <button onclick="gerarAventura()">Gerar Missão</button>
-    <!-- Botões de salvar e carregar dados -->
-    <button id="saveData">Salvar TXT</button>
-    <input type="file" id="loadData" accept=".txt">
 
-    
-    <div id="resultados"></div>
+  <div class="container my-4">
+    <h1 class="text-center mb-4">Aventuras Sem Fim</h1>
+    <div class="text-center mb-4">
+      <button onclick="gerarAventura()" class="btn btn-primary me-2">Gerar Missão</button>
+      <button id="saveData" class="btn btn-success me-2">Salvar TXT</button>
+      <input type="file" id="loadData" accept=".txt" class="btn btn-outline-secondary">
+    </div>
+
+    <div id="resultados" class="mb-5"></div>
 
     <h3>Missões Completadas:</h3>
-    <ul id="lista-missoes"></ul>
+    <ul id="lista-missoes" class="list-group mb-5"></ul>
 
-    <script src="script.js"></script>
+    <h2 class="text-center mb-4">Solicitantes de Candeh’ssa</h2>
+    <div id="solicitantesContainer" class="row g-4">
+      <!-- Cards dos solicitantes aqui -->
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
