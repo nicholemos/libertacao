@@ -10,11 +10,9 @@
     <h1>Aventuras Sem Fim</h1>
     <button onclick="gerarAventura()">Gerar Missão</button>
     <!-- Botões de salvar e carregar dados -->
-    <div class="save-load">
-      <button onclick="salvarTXT()">Salvar em TXT</button>
-        <input type="file" accept=".txt" onchange="carregarTXT(event)" />
+    <button id="saveData">Salvar TXT</button>
+    <input type="file" id="loadData" accept=".txt">
 
-    </div>
     
     <div id="resultados"></div>
 
