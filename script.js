@@ -78,7 +78,7 @@ const solicitantes = [
         descricao: "Instalada em uma casa de pedra com um amplo pátio, onde é possível avistar uma forja e diversas bancadas de trabalho, a Oficina de Candeh’ssa é também morada dos três mestres artífices da cidade: Harko, o armeiro; Phylla, a couraceira; e Kandor, o artesão. Quando um deles trabalha, é normal reunir pequenos bandos de admiradores; mesmo após séculos, não cansam de testemunhar o trabalho destes grandes mestres.",
         servicos: " Armas, escudos e armaduras normais e superiores e aplicação de melhorias em itens destas categorias. Também é possível comprar versões mágicas destes itens ou solicitar a aplicação de encantos. Para isso, role a disponibilidade do item (veja o quadro na p. 29). Chance de 75% para itens menores, 50% para itens médios e 25% para itens maiores. Para a disponibilidade de encantos, considere o nível que o item terá se o encanto for aplicado.",
         honrarias: "Um item do personagem recebe uma melhoria à sua escolha (exceto material especial), cujos pré-requisitos cumpra.",
-        imagem: "https://static.wikia.nocookie.net/powerlisting/images/5/55/Oetsu_Nimaiya_forging_skills.gif"
+        imagem: "https://i.imgflip.com/9rtida.gif"
     },
     {
         nome: "Pesqueiro",
