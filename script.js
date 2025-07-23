@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
       actionsDiv.classList.add('npc-actions');
 
       const affinityBtn = document.createElement('button');
-      affinityBtn.innerText = 'Afinidade';
+      affinityBtn.innerText = 'Anotações';
       affinityBtn.onclick = (e) => {
         e.stopPropagation();
         const currentText = npcContainer.dataset.affinityText;
