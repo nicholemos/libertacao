@@ -99,6 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
             nameDisplay.textContent = nameValue;
             nameContainer.innerHTML = '';
             nameContainer.appendChild(nameDisplay);
+            npcContainer.closest('.npc-entry').querySelector('.npc-trigger .npc-name').textContent = nameValue;
+
           }
         };
         nameContainer.appendChild(nameInput);
@@ -240,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const npcTrigger = document.createElement('h5');
           npcTrigger.className = 'npc-trigger';
           const heartCount = npcData.hearts || 0;
-          npcTrigger.innerHTML = `${npcData.name || 'Novo NPC'} <span class="heart-count">(❤️ ${heartCount}/7)</span>`;
+          npcTrigger.innerHTML = `<span class="npc-name">${npcData.name || 'Novo NPC'}</span><span class="heart-count">(❤️ ${heartCount}/7)</span>`;
 
           const npcCardContainer = document.createElement('div');
           npcCardContainer.className = 'npc-card-container collapsed';
@@ -272,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const npcTrigger = document.createElement('h5');
         npcTrigger.className = 'npc-trigger';
-        npcTrigger.innerHTML = `Novo NPC <span class="heart-count">(❤️ 0/7)</span>`;
+        npcTrigger.innerHTML = `<span class="npc-name">Novo NPC</span> <span class="heart-count">(❤️ 0/7)</span>`;
 
         const npcCardContainer = document.createElement('div');
         npcCardContainer.className = 'npc-card-container collapsed';
@@ -368,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     return { getSaveData, loadSaveData };
-    
+
   })();
 
 
