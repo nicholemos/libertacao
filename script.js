@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
         descricao: "No centro de Candeh’ssa, este estabelecimento se destaca por sua imponência. Vinte colunas se erguem ao redor, dedicadas a cada deus do Panteão, trazendo cada uma a efígie de seu patrono no topo. Suas pilastras afiladas fazem a estrutura inteira lembrar uma majestosa coroa, enquanto o interior é adorado com mosaicos e vitrais mágicos. O templo é cuidado por muitos espíritos e gênios, que respondem às duas autoridades locais: Rafiq, o Piedoso, que ministra ritos dedicados aos deuses de energia positiva, e Tanit, a Oculta, celebrante dedicada aos deuses de energia negativa.",
         servicos: " Ritos de penitência para devotos que tenham violado Obrigações & Restrições de suas divindades. Também oferece água benta, itens esotéricos que afetam magias divinas e serviços de magias divinas. Devotos de deuses que canalizam energia positiva recebem 10% de desconto em qualquer transação.",
         honrarias: " Caso seja devoto, você recebe um poder concedido extra de sua divindade.",
-        imagem: "https://pa1.aminoapps.com/6698/c05c82e7f98a99cbf8151f265f39dc645e11de46_00.gif"
+        imagem: "https://64.media.tumblr.com/b640f35cf0cf1d917dd10582740251de/af7a238626fb8aac-18/s400x600/79022122929420ad24d12c4c9658991de0081fd6.gif"
       }
     ];
     const objetivos = [
