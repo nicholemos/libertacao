@@ -15,13 +15,15 @@
 <body>
 
   <header class="main-header">
-    <h1>Painel do Mestre</h1>
-    <div class="controls-main">
-      <button id="saveData" class="btn-save">Salvar Progresso</button>
-      <label for="loadData" class="btn-load">Carregar Progresso</label>
-      <input type="file" id="loadData" accept=".json" style="display: none;">
-    </div>
-  </header>
+  <h1>Painel do Mestre</h1>
+  <div class="controls-main">
+    <button id="clearAllData" class="btn-remove" style="width: auto; padding: 10px 20px;">Limpar Tudo</button> 
+    
+    <button id="saveData" class="btn-save">Salvar Progresso</button>
+    <label for="loadData" class="btn-load">Carregar Progresso</label>
+    <input type="file" id="loadData" accept=".json" style="display: none;">
+  </div>
+</header>
 
   <div class="main-container">
     <section id="npc-progress-section" class="card">
