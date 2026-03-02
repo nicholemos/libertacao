@@ -1,4 +1,11 @@
 /* --- GERAL & SETUP --- */
+@font-face {
+    font-family: 'Tormenta20';
+    src: url('Tormenta.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
     --bg-color: #1a1a1d;
     --card-bg: #28282e;
@@ -10,7 +17,8 @@
     --fail-color: #C3073F;
     --border-color: #4e4e50;
     --font-main: 'Roboto', sans-serif;
-    --font-title: 'Teko', sans-serif;
+    /* Alterado para usar a fonte carregada */
+    --font-title: 'Tormenta20', 'Teko', sans-serif;
 }
 
 * {
