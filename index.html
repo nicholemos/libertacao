@@ -24,7 +24,6 @@
   </header>
 
   <div class="main-container">
-
     <section id="npc-progress-section" class="card">
       <header>
         <h2>Progresso com NPCs</h2>
@@ -34,37 +33,57 @@
         </div>
         <button id="removePlayer" class="btn-remove">Remover Jogador Selecionado</button>
       </header>
+
       <div id="player-list"></div>
+
       <h2>Gerador de Missões</h2>
       <div class="mission-controls">
         <button id="gerarAventura" class="btn-generate">Gerar Missão Aleatória</button>
       </div>
+
       <div id="mission-board">
         <h3>Missões Pendentes</h3>
         <div id="resultados-missoes" class="mission-list"></div>
-        <h3>Missões Completadas</h3>
-        <ul id="lista-missoes-completadas" class="completed-mission-list"></ul>
 
+        <h3>Missões Completadas</h3>
+        <button id="clearFailedMissions" class="btn-remove"
+          style="margin-bottom: 10px; width: auto; padding: 5px 15px;">
+          Limpar Falhas
+        </button>
+        <ul id="lista-missoes-completadas" class="completed-mission-list"></ul>
+      </div>
+
+      <div id="npc-allies-board"
+        style="margin-top: 30px; border-top: 2px solid var(--border-color); padding-top: 20px;">
+        <h3>NPCs Aliados</h3>
+        <div class="player-form">
+          <input type="text" id="allyNpcName" placeholder="Nome do NPC Aliado">
+          <button id="addAllyNpc">Adicionar Aliado</button>
+        </div>
+        <div id="ally-npc-list"
+          style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
+        </div>
+      </div>
     </section>
 
     <section id="missions-section" class="card">
-      <header>
-        <section id="honrarias-conquistadas" class="card">
-          <h2>Honrarias Conquistadas</h2>
-          <div id="honrarias-conquistadas-list">
-          </div>
-        </section>
+      <section id="honrarias-conquistadas">
+        <h2>Honrarias Conquistadas</h2>
+        <div id="honrarias-conquistadas-list"></div>
+      </section>
 
+      <header style="border-bottom: none; margin-top: 20px;">
         <div class="filter-container">
           <label for="filtroSolicitante">Filtrar por Solicitante:</label>
           <select id="filtroSolicitante">
             <option value="Todos">Todos</option>
           </select>
         </div>
-
         <h3>Estabelecimentos</h3>
-        <div id="solicitantes-container" class="solicitantes-grid">
-        </div>
+      </header>
+
+      <div id="solicitantes-container" class="solicitantes-grid"></div>
+    </section>
   </div>
   </header>
 
