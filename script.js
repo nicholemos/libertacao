@@ -774,10 +774,41 @@ document.addEventListener('DOMContentLoaded', () => {
     return allies;
   };
 
+  const clearAllData = () => {
+    if (confirm("ATENÇÃO: Isso apagará todos os jogadores, missões, aliados e o cache do navegador. Deseja continuar?")) {
+        
+        // 1. Limpa o Cache
+        localStorage.removeItem('rpg_panel_autosave');
+        
+        // 2. Limpa NPCs de Jogadores
+        document.getElementById('player-list').innerHTML = '';
+        
+        // 3. Limpa Missões Pendentes e Completadas
+        document.getElementById('resultados-missoes').innerHTML = '';
+        document.getElementById('lista-missoes-completadas').innerHTML = '';
+        
+        // 4. Limpa NPCs Aliados
+        document.getElementById('ally-npc-list').innerHTML = '';
+        
+        // 5. Reseta Honrarias e Filtros
+        const honorsList = document.getElementById('honrarias-conquistadas-list');
+        if (honorsList) honorsList.innerHTML = '<p class="empty-list-message">Nenhuma honraria conquistada.</p>';
+        
+        // 6. Reseta classes de visualização nos cards de estabelecimentos
+        document.querySelectorAll('.honrarias').forEach(h => h.classList.remove('revealed'));
+        
+        console.log('Todos os dados foram resetados.');
+        
+        // Opcional: Recarrega a página para resetar variáveis internas (como numeroMissao)
+        window.location.reload();
+    }
+};
+
   // Listeners
   document.getElementById('saveData').addEventListener('click', saveData);
   document.getElementById('loadData').addEventListener('change', loadData);
   document.getElementById('clearFailedMissions').addEventListener('click', missionModule.clearFailedMissions);
+  document.getElementById('clearAllData').addEventListener('click', clearAllData);
   window.addEventListener('beforeunload', autoSaveToCache);
 
   // Monitorar Cliques para Autosave
