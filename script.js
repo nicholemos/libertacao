@@ -777,29 +777,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const clearAllData = () => {
     if (confirm("ATENÇÃO: Isso apagará todos os jogadores, missões, aliados e o cache do navegador. Deseja continuar?")) {
         
-        // 1. Limpa o Cache
+        // 1. Limpa o Cache do navegador
         localStorage.removeItem('rpg_panel_autosave');
         
-        // 2. Limpa NPCs de Jogadores
+        // 2. Limpa a lista de NPCs de Jogadores
         document.getElementById('player-list').innerHTML = '';
         
-        // 3. Limpa Missões Pendentes e Completadas
+        // 3. Limpa as Missões Pendentes e o histórico de Completadas
         document.getElementById('resultados-missoes').innerHTML = '';
         document.getElementById('lista-missoes-completadas').innerHTML = '';
         
-        // 4. Limpa NPCs Aliados
+        // 4. Limpa a lista de NPCs Aliados
         document.getElementById('ally-npc-list').innerHTML = '';
         
-        // 5. Reseta Honrarias e Filtros
+        // 5. LIMPAR HONRARIAS CONQUISTADAS (A parte que faltava)
+        // Limpa o texto da lista visual
         const honorsList = document.getElementById('honrarias-conquistadas-list');
-        if (honorsList) honorsList.innerHTML = '<p class="empty-list-message">Nenhuma honraria conquistada.</p>';
+        if (honorsList) {
+            honorsList.innerHTML = '<p class="empty-list-message">Nenhuma honraria conquistada.</p>';
+        }
+
+        // Remove o estado "revelado" de todos os cards de estabelecimentos
+        document.querySelectorAll('.honrarias').forEach(h => {
+            h.classList.remove('revealed');
+        });
+
+        // Limpa o conjunto de honrarias no script (se estiver acessível globalmente)
+        // Se a variável honrariasLiberadas estiver dentro de um módulo, 
+        // o reload abaixo cuidará de resetar o Set().
+
+        console.log('Todos os dados e honrarias foram resetados.');
         
-        // 6. Reseta classes de visualização nos cards de estabelecimentos
-        document.querySelectorAll('.honrarias').forEach(h => h.classList.remove('revealed'));
-        
-        console.log('Todos os dados foram resetados.');
-        
-        // Opcional: Recarrega a página para resetar variáveis internas (como numeroMissao)
+        // 6. Recarrega a página para garantir que todas as variáveis internas voltem ao zero
         window.location.reload();
     }
 };
