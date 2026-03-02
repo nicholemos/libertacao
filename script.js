@@ -1,52 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // =================================================================
-  // CÓDIGO UNIFICADO DE DADOS E CONTROLES GERAIS
-  // =================================================================
-  const saveDataBtn = document.getElementById('saveData');
-  const loadDataInput = document.getElementById('loadData');
-
-  const saveData = () => {
-    const combinedData = {
-      npcProgress: npcModule.getSaveData(),
-      missionProgress: missionModule.getSaveData()
-    };
-    const blob = new Blob([JSON.stringify(combinedData, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'painel_mestre_rpg.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  };
-
-  const loadData = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (data.npcProgress) {
-          npcModule.loadSaveData(data.npcProgress);
-        }
-        if (data.missionProgress) {
-          missionModule.loadSaveData(data.missionProgress);
-        }
-      } catch (error) {
-        alert('Erro ao carregar o arquivo. Verifique se ele está no formato JSON correto.');
-        console.error("Load error:", error);
-      }
-    };
-    reader.readAsText(file);
-    event.target.value = ''; // Reset input
-  };
-
-  saveDataBtn.addEventListener('click', saveData);
-  loadDataInput.addEventListener('change', loadData);
-
-
-  // =================================================================
-  // MÓDULO DE PROGRESSO COM NPCS (ANTIGO script (1).js)
+  // MÓDULO DE PROGRESSO COM NPCS
   // =================================================================
   const npcModule = (() => {
     let playerCount = 0;
@@ -56,21 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerNameInput = document.getElementById('playerName');
     const removePlayerBtn = document.getElementById('removePlayer');
 
-    // SUBSTITUA TODA a função createNpc por esta
-    // SUBSTITUA TODA a função createNpc por esta nova versão
-    // SUBSTITUA a função createNpc por esta versão
     function createNpc(container, npcData = { name: '', hearts: 0, image: '', affinityText: '' }) {
       const npcContainer = document.createElement('div');
       npcContainer.classList.add('npc-item');
-
-      // Removemos a classe 'collapsed' daqui, pois será controlada pelo container pai
-      if (npcData.image) {
-        npcContainer.style.backgroundImage = `url(${npcData.image})`;
-      }
-
+      if (npcData.image) npcContainer.style.backgroundImage = `url(${npcData.image})`;
       npcContainer.dataset.affinityText = npcData.affinityText || '';
-
-      // O evento de clique para expandir foi removido daqui
 
       const nameContainer = document.createElement('div');
       nameContainer.className = 'npc-name-container';
@@ -100,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
             nameContainer.innerHTML = '';
             nameContainer.appendChild(nameDisplay);
             npcContainer.closest('.npc-entry').querySelector('.npc-trigger .npc-name').textContent = nameValue;
-
           }
         };
         nameContainer.appendChild(nameInput);
@@ -135,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         hearts.forEach((heart, index) => {
           heart.classList.toggle('active', index < currentHearts);
         });
-        // Atualiza o contador de corações no trigger quando os corações mudam
         const trigger = container.previousElementSibling;
         if (trigger && trigger.classList.contains('npc-trigger')) {
           const heartCountSpan = trigger.querySelector('.heart-count');
@@ -167,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
       affinityBtn.onclick = (e) => {
         e.stopPropagation();
         const currentText = npcContainer.dataset.affinityText;
-        const newText = prompt("Digite as anotações sobre a afinidade do NPC:", currentText);
+        const newText = prompt("Digite as anotações:", currentText);
         if (newText !== null) {
           npcContainer.dataset.affinityText = newText;
           affinityTextDisplay.textContent = newText;
@@ -200,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
       removeNpcButton.innerText = 'Remover NPC';
       removeNpcButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        container.parentElement.remove(); // Remove a entrada inteira (trigger + container)
+        container.parentElement.remove();
       });
 
       actionsDiv.appendChild(affinityBtn);
@@ -208,12 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
       actionsDiv.appendChild(removeNpcButton);
       npcContainer.appendChild(actionsDiv);
 
-      // A MUDANÇA PRINCIPAL: Adiciona o card ao container recebido como parâmetro
       container.appendChild(npcContainer);
       updateHearts();
     }
 
-    // SUBSTITUA TODA a função createPlayer por esta versão corrigida
     function createPlayer(playerData) {
       const playerContainer = document.createElement('div');
       playerContainer.classList.add('player-container', 'collapsed');
@@ -233,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const npcListContainer = document.createElement('div');
       npcListContainer.className = 'npc-list';
 
-      // --- LÓGICA RESTAURADA PARA EXIBIR NPCs EXISTENTES ---
       if (playerData.npcs) {
         playerData.npcs.forEach(npcData => {
           const npcEntry = document.createElement('div');
@@ -262,12 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       collapsibleContent.appendChild(npcListContainer);
 
-      // --- LÓGICA CORRIGIDA PARA O BOTÃO "ADICIONAR NPC" ---
       const addNpcButton = document.createElement('button');
       addNpcButton.innerText = 'Adicionar NPC';
       addNpcButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Cria um novo NPC vazio
         const npcData = { name: '', hearts: 0, image: '', affinityText: '' };
         const npcEntry = document.createElement('div');
         npcEntry.className = 'npc-entry';
@@ -317,44 +255,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     removePlayerBtn.addEventListener('click', () => {
       if (!selectedPlayer) {
-        alert("Selecione um jogador para remover.");
+        alert("Selecione um jogador.");
         return;
       }
       const playerName = selectedPlayer.querySelector('h3').innerText;
-      if (confirm(`Deseja realmente remover o jogador "${playerName}"?`)) {
+      if (confirm(`Remover "${playerName}"?`)) {
         selectedPlayer.remove();
         selectedPlayer = null;
       }
     });
 
-    // SUBSTITUA TODA a função getSaveData por esta
     function getSaveData() {
       const data = [];
       document.querySelectorAll('.player-container').forEach(player => {
-        const playerName = player.querySelector('h3').innerText;
+        const playerName = player.querySelector('h3').innerText.replace(' ▼', '');
         const npcs = [];
         player.querySelectorAll('.npc-item').forEach(npc => {
-
-          // --- NOVO: Lógica para obter o nome (seja do input ou do texto salvo) ---
           let npcName = '';
           const nameDisplay = npc.querySelector('.npc-name-display');
-          if (nameDisplay) {
-            npcName = nameDisplay.textContent;
-          } else {
-            const nameInput = npc.querySelector('.npc-name-input');
-            if (nameInput) {
-              // Se o nome ainda não foi salvo, não o incluímos para que o input apareça no load
-              npcName = '';
-            }
-          }
-
+          if (nameDisplay) npcName = nameDisplay.textContent;
           const npcHearts = npc.querySelectorAll('.heart.active').length;
           let imageUrl = npc.style.backgroundImage;
           imageUrl = (imageUrl && imageUrl !== 'none') ? imageUrl.slice(5, -2) : '';
-
-          // --- NOVO: Obtém o texto de afinidade do dataset ---
           const affinityText = npc.dataset.affinityText || '';
-
           npcs.push({ name: npcName, hearts: npcHearts, image: imageUrl, affinityText: affinityText });
         });
         data.push({ name: playerName, npcs });
@@ -370,15 +293,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     return { getSaveData, loadSaveData };
-
   })();
 
-
   // =================================================================
-  // MÓDULO DE AVENTURAS SEM FIM (ANTIGO script.js)
+  // MÓDULO DE MISSÕES
   // =================================================================
   const missionModule = (() => {
-    // DATA ARRAYS
     const solicitantes = [
       {
         nome: "Antiquário",
@@ -546,33 +466,15 @@ document.addEventListener('DOMContentLoaded', () => {
         descricao: "Você ganha um bem material. Role na tabela Tesouros (Tormenta20, p. 328), na coluna de riquezas e de itens, na linha correspondente a seu nível."
       }
     ];
-    // ADICIONE ESTA NOVA FUNÇÃO DENTRO DO missionModule
-    function displayUnlockedHonors() {
-      const container = document.getElementById('honrarias-conquistadas-list');
-      if (!container) return; // Se o container não existir, não faz nada
 
-      container.innerHTML = ''; // Limpa a lista antes de recriar
+    function clearFailedMissions() {
+      const falhas = listaCompletadas.querySelectorAll('.status-falha');
+      if (falhas.length === 0) return;
 
-      if (honrariasLiberadas.size === 0) {
-        container.innerHTML = '<p class="empty-list-message">Nenhuma honraria foi conquistada ainda.</p>';
-        return;
+      if (confirm(`Deseja apagar as ${falhas.length} missões com falha?`)) {
+        falhas.forEach(li => li.remove());
+        autoSaveToCache(); // Atualiza o cache imediatamente 
       }
-
-      honrariasLiberadas.forEach(nomeSolicitante => {
-        const solicitanteData = solicitantes.find(s => s.nome === nomeSolicitante);
-        if (solicitanteData) {
-          const honorItem = document.createElement('div');
-          honorItem.className = 'unlocked-honor-item';
-          honorItem.innerHTML = `
-                <img src="${solicitanteData.imagem}" class="unlocked-honor-image" alt="${solicitanteData.nome}">
-                <div class="unlocked-honor-text">
-                    <strong>${solicitanteData.nome}:</strong>
-                    <p>${solicitanteData.honrarias}</p>
-                </div>
-            `;
-          container.appendChild(honorItem);
-        }
-      });
     }
 
     let numeroMissao = 1;
@@ -582,54 +484,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const solicitantesContainer = document.getElementById('solicitantes-container');
     const filtroSelect = document.getElementById('filtroSolicitante');
 
-    // SUBSTITUA TODA a função init() por esta nova versão
+    function displayUnlockedHonors() {
+      const container = document.getElementById('honrarias-conquistadas-list');
+      if (!container) return;
+      container.innerHTML = '';
+      if (honrariasLiberadas.size === 0) {
+        container.innerHTML = '<p class="empty-list-message">Nenhuma honraria conquistada.</p>';
+        return;
+      }
+      honrariasLiberadas.forEach(nomeSolicitante => {
+        const s = solicitantes.find(sol => sol.nome === nomeSolicitante);
+        if (s) {
+          const item = document.createElement('div');
+          item.className = 'unlocked-honor-item';
+          item.innerHTML = `<img src="${s.imagem}" class="unlocked-honor-image">
+            <div class="unlocked-honor-text"><strong>${s.nome}:</strong><p>${s.honrarias}</p></div>`;
+          container.appendChild(item);
+        }
+      });
+    }
+
     function init() {
-      // Init Filter
       solicitantes.forEach(s => {
         const opt = document.createElement('option');
-        opt.value = s.nome;
-        opt.textContent = s.nome;
+        opt.value = s.nome; opt.textContent = s.nome;
         filtroSelect.appendChild(opt);
       });
       filtroSelect.addEventListener('change', applyFilter);
 
-      // Init Solicitantes Cards
-      solicitantesContainer.innerHTML = ''; // Limpar antes de adicionar
+      solicitantesContainer.innerHTML = '';
       solicitantes.forEach(s => {
         const card = document.createElement('div');
-        card.className = 'solicitante-card collapsed'; // Começa recolhido
+        card.className = 'solicitante-card collapsed';
         card.dataset.solicitanteNome = s.nome;
-
-        // Adiciona o evento de clique no card inteiro para alternar
-        card.addEventListener('click', () => {
-          card.classList.toggle('collapsed');
-        });
-
-        // --- Conteúdo Visível (Recolhido) ---
-        const visibleContent = document.createElement('div');
-        visibleContent.className = 'solicitante-visible-content';
-        visibleContent.innerHTML = `
-            <img src="${s.imagem}" alt="${s.nome}">
-            <h5>${s.nome}</h5>
-        `;
-
-        // --- Conteúdo Expansível ---
-        const collapsibleContent = document.createElement('div');
-        collapsibleContent.className = 'solicitante-collapsible-content';
-        collapsibleContent.innerHTML = `
-            <p><strong>Descrição:</strong> ${s.descricao}</p>
-            <p><strong>Serviços:</strong> ${s.servicos}</p>
-        `;
-
-        // Div de Honrarias (separada para a regra especial)
-        const honrariasDiv = document.createElement('div');
-        honrariasDiv.className = 'honrarias';
-        honrariasDiv.innerHTML = `<p><strong>Honrarias:</strong> ${s.honrarias}</p>`;
-
-        card.appendChild(visibleContent);
-        card.appendChild(collapsibleContent);
-        card.appendChild(honrariasDiv); // Adiciona honrarias fora do conteúdo expansível
-
+        card.addEventListener('click', () => card.classList.toggle('collapsed'));
+        card.innerHTML = `<div class="solicitante-visible-content"><img src="${s.imagem}"><h5>${s.nome}</h5></div>
+          <div class="solicitante-collapsible-content"><p><strong>Descrição:</strong> ${s.descricao}</p><p><strong>Serviços:</strong> ${s.servicos}</p></div>
+          <div class="honrarias"><p><strong>Honrarias:</strong> ${s.honrarias}</p></div>`;
         solicitantesContainer.appendChild(card);
       });
 
@@ -638,84 +529,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyFilter() {
       const sel = filtroSelect.value;
-      document.querySelectorAll('#resultados-missoes .mission-box').forEach(box => {
-        box.style.display = (sel === 'Todos' || box.dataset.solicitante === sel) ? '' : 'none';
-      });
-      document.querySelectorAll('#lista-missoes-completadas li').forEach(li => {
-        li.style.display = (sel === 'Todos' || li.dataset.solicitante === sel) ? '' : 'none';
-      });
-      document.querySelectorAll('#solicitantes-container .solicitante-card').forEach(card => {
-        card.style.display = (sel === 'Todos' || card.dataset.solicitanteNome === sel) ? '' : 'none';
-      });
+      document.querySelectorAll('.mission-box').forEach(box => box.style.display = (sel === 'Todos' || box.dataset.solicitante === sel) ? '' : 'none');
+      document.querySelectorAll('#lista-missoes-completadas li').forEach(li => li.style.display = (sel === 'Todos' || li.dataset.solicitante === sel) ? '' : 'none');
+      document.querySelectorAll('.solicitante-card').forEach(card => card.style.display = (sel === 'Todos' || card.dataset.solicitanteNome === sel) ? '' : 'none');
     }
 
     function gerarAventura() {
-      if (resultadosContainer.children.length >= 4) {
-        alert("Você já tem 4 missões. Complete algumas antes de criar mais.");
-        return;
-      }
-      const solicitante = solicitantes[Math.floor(Math.random() * solicitantes.length)];
-      const objetivo = objetivos[Math.floor(Math.random() * objetivos.length)];
-      const recompensa = recompensas[Math.floor(Math.random() * recompensas.length)];
-
-      renderizarMissaoPendente({
-        num: numeroMissao,
-        sol: solicitante.nome,
-        obj: objetivo.nome,
-        rec: recompensa.nome
-      });
-      numeroMissao++;
+      if (resultadosContainer.children.length >= 4) return alert("Limite de missões atingido.");
+      const s = solicitantes[Math.floor(Math.random() * solicitantes.length)];
+      const o = objetivos[Math.floor(Math.random() * objetivos.length)];
+      const r = recompensas[Math.floor(Math.random() * recompensas.length)];
+      renderizarMissaoPendente({ num: numeroMissao++, sol: s.nome, obj: o.nome, rec: r.nome });
     }
 
     function renderizarMissaoPendente(data) {
       const box = document.createElement("div");
       box.className = "mission-box";
-      box.dataset.numMissao = data.num;
-      box.dataset.solicitante = data.sol;
-      box.dataset.objetivo = data.obj;
-      box.dataset.recompensa = data.rec;
-
-      box.innerHTML = `
-            <h4>Missão #${data.num}</h4>
-            <p><strong>Solicitante:</strong> ${data.sol}</p>
-            <p><strong>Objetivo:</strong> <span class="clickable">${data.obj}</span></p>
-            <p><strong>Recompensa:</strong> <span class="clickable">${data.rec}</span></p>
-            <div class="mission-status">
-              <button class="btn-success">✔</button>
-              <button class="btn-fail">✖</button>
-            </div>
-        `;
-
-      box.querySelector('.btn-success').onclick = (e) => marcarStatus(e.target, 'sucesso');
-      box.querySelector('.btn-fail').onclick = (e) => marcarStatus(e.target, 'falha');
-      box.querySelector('p:nth-of-type(2) .clickable').onclick = () => mostrarDetalhes('objetivo', data.obj);
-      box.querySelector('p:nth-of-type(3) .clickable').onclick = () => mostrarDetalhes('recompensa', data.rec);
-
+      box.dataset.numMissao = data.num; box.dataset.solicitante = data.sol;
+      box.dataset.objetivo = data.obj; box.dataset.recompensa = data.rec;
+      box.innerHTML = `<h4>Missão #${data.num}</h4><p>Solicitante: ${data.sol}</p>
+        <p>Objetivo: <span class="clickable">${data.obj}</span></p><p>Recompensa: <span class="clickable">${data.rec}</span></p>
+        <div class="mission-status"><button class="btn-success">✔</button><button class="btn-fail">✖</button></div>`;
+      box.querySelector('.btn-success').onclick = () => marcarStatus(box, 'sucesso');
+      box.querySelector('.btn-fail').onclick = () => marcarStatus(box, 'falha');
       resultadosContainer.appendChild(box);
-      applyFilter(); // Garante que o filtro seja aplicado na nova missão
+      applyFilter();
     }
 
-    function marcarStatus(botao, status) {
-      const box = botao.closest(".mission-box");
-      const missionData = {
-        num: box.dataset.numMissao,
-        sol: box.dataset.solicitante,
-        obj: box.dataset.objetivo,
-        rec: box.dataset.recompensa,
-        status: status
-      };
-
-      if (status === 'falha') {
-        missionData.rec = 'Nenhuma';
-      } else {
-        if (!honrariasLiberadas.has(missionData.sol)) {
-          honrariasLiberadas.add(missionData.sol);
-          revelarHonrarias(missionData.sol);
-          displayUnlockedHonors(); // <-- ADICIONE ESTA LINHA
-
-        }
+    function marcarStatus(box, status) {
+      const data = { num: box.dataset.numMissao, sol: box.dataset.solicitante, obj: box.dataset.objetivo, rec: status === 'falha' ? 'Nenhuma' : box.dataset.recompensa, status: status };
+      if (status === 'sucesso' && !honrariasLiberadas.has(data.sol)) {
+        honrariasLiberadas.add(data.sol);
+        revelarHonrarias(data.sol);
+        displayUnlockedHonors();
       }
-      renderizarMissaoCompletada(missionData);
+      renderizarMissaoCompletada(data);
       box.remove();
     }
 
@@ -723,103 +571,221 @@ document.addEventListener('DOMContentLoaded', () => {
       const li = document.createElement('li');
       li.className = data.status === 'sucesso' ? 'status-sucesso' : 'status-falha';
       li.dataset.solicitante = data.sol;
-      li.innerHTML = `Missão #${data.num} (${data.status}) - Solicitante: ${data.sol} - Recompensa: <span class="clickable">${data.rec}</span>`;
-
-      const recompensaSpan = li.querySelector('.clickable');
-      if (recompensaSpan && data.rec !== 'Nenhuma') {
-        recompensaSpan.onclick = () => mostrarDetalhes('recompensa', data.rec);
-      }
-
+      li.innerHTML = `Missão #${data.num} (${data.status}) - ${data.sol} - Recompensa: ${data.rec}`;
       listaCompletadas.appendChild(li);
-      sortCompletedList();
       applyFilter();
     }
 
-    function revelarHonrarias(nomeSolicitante) {
+    function revelarHonrarias(nome) {
       document.querySelectorAll('.solicitante-card').forEach(card => {
-        if (card.dataset.solicitanteNome === nomeSolicitante) {
-          const honElem = card.querySelector('.honrarias');
-          if (honElem) honElem.classList.add('revealed');
-        }
+        if (card.dataset.solicitanteNome === nome) card.querySelector('.honrarias').classList.add('revealed');
       });
-    }
-
-    function mostrarDetalhes(tipo, nome) {
-      let data = (tipo === 'objetivo') ? objetivos.find(o => o.nome === nome) : recompensas.find(r => r.nome === nome);
-      if (!data) return;
-
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.innerHTML = `
-        <div class="modal-content">
-          <h4>${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: ${nome}</h4>
-          <p>${data.descricao}</p>
-          <button>Fechar</button>
-        </div>
-      `;
-      modal.querySelector('button').onclick = () => modal.remove();
-      modal.onclick = (e) => { if (e.target === modal) modal.remove() };
-      document.body.appendChild(modal);
-    }
-
-    function sortCompletedList() {
-      const items = Array.from(listaCompletadas.children);
-      items.sort((a, b) => {
-        const numA = parseInt(a.textContent.match(/#(\d+)/)[1]);
-        const numB = parseInt(b.textContent.match(/#(\d+)/)[1]);
-        return numA - numB;
-      }).forEach(item => listaCompletadas.appendChild(item));
     }
 
     function getSaveData() {
-      const pendentes = Array.from(resultadosContainer.children).map(box => ({
-        num: box.dataset.numMissao,
-        sol: box.dataset.solicitante,
-        obj: box.dataset.objetivo,
-        rec: box.dataset.recompensa,
-      }));
-
-      const completadas = Array.from(listaCompletadas.children).map(li => {
-        const match = li.textContent.match(/#(\d+) \((.+?)\) - Solicitante: (.+?) - Recompensa: (.+)/);
-        return {
-          num: match[1],
-          status: match[2],
-          sol: match[3].trim(),
-          rec: match[4]
-        };
-      });
-
       return {
         numeroMissao,
         honrariasLiberadas: Array.from(honrariasLiberadas),
-        pendentes,
-        completadas,
+        pendentes: Array.from(resultadosContainer.children).map(b => ({ num: b.dataset.numMissao, sol: b.dataset.solicitante, obj: b.dataset.objetivo, rec: b.dataset.recompensa })),
+        completadas: Array.from(listaCompletadas.children).map(li => ({ text: li.innerHTML, status: li.className, sol: li.dataset.solicitante }))
       };
     }
 
     function loadSaveData(data) {
-      resultadosContainer.innerHTML = '';
-      listaCompletadas.innerHTML = '';
-      honrariasLiberadas.clear();
-
+      resultadosContainer.innerHTML = ''; listaCompletadas.innerHTML = ''; honrariasLiberadas.clear();
       numeroMissao = data.numeroMissao || 1;
-
-      data.honrariasLiberadas.forEach(honra => {
-        honrariasLiberadas.add(honra);
-        revelarHonrarias(honra);
+      (data.honrariasLiberadas || []).forEach(h => { honrariasLiberadas.add(h); revelarHonrarias(h); });
+      (data.pendentes || []).forEach(m => renderizarMissaoPendente(m));
+      (data.completadas || []).forEach(m => {
+        const li = document.createElement('li'); li.className = m.status; li.dataset.solicitante = m.sol; li.innerHTML = m.text;
+        listaCompletadas.appendChild(li);
       });
-
-      data.pendentes.forEach(missao => renderizarMissaoPendente(missao));
-      data.completadas.forEach(missao => renderizarMissaoCompletada(missao));
-
-      sortCompletedList();
-      displayUnlockedHonors(); // <-- ADICIONE ESTA LINHA
-
+      displayUnlockedHonors();
     }
 
-    init(); // Inicializa o módulo
-
-    return { getSaveData, loadSaveData };
+    init();
+    return { getSaveData, loadSaveData, clearFailedMissions };
   })();
 
+  // =================================================================
+  // CONTROLES DE DADOS (SAVE / LOAD / AUTOSAVE)
+  // =================================================================
+  const saveData = () => {
+    const data = {
+      npcProgress: npcModule.getSaveData(),
+      missionProgress: missionModule.getSaveData(),
+      allyProgress: getAllyNpcData() // Novo campo 
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'painel_mestre_rpg.json';
+    a.click();
+  };
+
+  const loadData = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+
+        // Carrega progresso dos Jogadores/NPCs
+        if (data.npcProgress) npcModule.loadSaveData(data.npcProgress);
+
+        // Carrega progresso das Missões
+        if (data.missionProgress) missionModule.loadSaveData(data.missionProgress);
+
+        // NOVO: Carrega os NPCs Aliados
+        if (data.allyProgress) {
+          const list = document.getElementById('ally-npc-list');
+          list.innerHTML = ''; // Limpa a lista atual antes de carregar
+          data.allyProgress.forEach(ally => createAllyNpc(ally));
+        }
+
+        console.log('Ficheiro carregado com sucesso, incluindo aliados.');
+      } catch (error) {
+        alert('Erro ao carregar o arquivo. Verifique o formato JSON.');
+        console.error("Load error:", error);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = ''; // Reset do input de ficheiro
+  };
+  // Procure estas funções e garanta que estão acessíveis
+  const autoSaveToCache = () => {
+    if (typeof npcModule !== 'undefined' && typeof missionModule !== 'undefined') {
+      const data = {
+        npcProgress: npcModule.getSaveData(),
+        missionProgress: missionModule.getSaveData(),
+        allyProgress: getAllyNpcData() // Novo campo 
+      };
+      localStorage.setItem('rpg_panel_autosave', JSON.stringify(data));
+      console.log('Autosave realizado com aliados.');
+    }
+  };
+
+  // Atualize o loadFromCache para reconstruir os aliados 
+  const loadFromCache = () => {
+    const saved = localStorage.getItem('rpg_panel_autosave');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+
+        if (data.npcProgress) npcModule.loadSaveData(data.npcProgress);
+        if (data.missionProgress) missionModule.loadSaveData(data.missionProgress);
+
+        // NOVO: Reconstruir Aliados do Cache
+        if (data.allyProgress) {
+          const list = document.getElementById('ally-npc-list');
+          if (list) {
+            list.innerHTML = '';
+            data.allyProgress.forEach(ally => createAllyNpc(ally));
+          }
+        }
+        console.log('Cache restaurado.');
+      } catch (e) {
+        console.error("Erro ao carregar o cache:", e);
+      }
+    }
+  };
+
+
+  function createAllyNpc(npcData = { name: '', desc: '', bonus: '', image: '' }) {
+    const list = document.getElementById('ally-npc-list');
+    const card = document.createElement('div');
+    card.className = 'solicitante-card collapsed'; // Reutilizando o estilo visual dos estabelecimentos
+
+    card.innerHTML = `
+        <div class="solicitante-visible-content">
+            <img src="${npcData.image || 'https://via.placeholder.com/150'}" alt="${npcData.name}" style="cursor: pointer;">
+            <h5 style="pointer-events: none;">${npcData.name || 'Novo Aliado'}</h5>
+        </div>
+        <div class="solicitante-collapsible-content" style="padding: 10px;">
+            <p><strong>Descrição:</strong> <span class="npc-desc-text">${npcData.desc || 'Clique para editar'}</span></p>
+            <div class="honrarias revealed" style="background-color: rgba(76, 175, 80, 0.1); border-left-color: var(--success-color);">
+                <p><strong>Bônus:</strong> <span class="npc-bonus-text">${npcData.bonus || 'Clique para editar'}</span></p>
+            </div>
+            <div class="npc-actions" style="margin-top: 10px; display: flex; gap: 5px;">
+                <button class="btn-edit-ally" style="font-size: 0.7rem;">Editar</button>
+                <button class="btn-img-ally" style="font-size: 0.7rem;">Imagem</button>
+                <button class="btn-remove-ally" style="font-size: 0.7rem; background-color: var(--fail-color);">Remover</button>
+            </div>
+        </div>
+    `;
+
+    // Evento para expandir/recolher ao clicar na imagem
+    card.querySelector('img').onclick = () => card.classList.toggle('collapsed');
+
+    // Lógica de Edição
+    card.querySelector('.btn-edit-ally').onclick = () => {
+      const nName = prompt("Nome:", npcData.name);
+      const nDesc = prompt("Descrição:", npcData.desc);
+      const nBonus = prompt("Bônus:", npcData.bonus);
+      if (nName) card.querySelector('h5').textContent = nName;
+      if (nDesc) card.querySelector('.npc-desc-text').textContent = nDesc;
+      if (nBonus) card.querySelector('.npc-bonus-text').textContent = nBonus;
+      autoSaveToCache();
+    };
+
+    // Lógica de Imagem (Reutilizando seu leitor de arquivos)
+    card.querySelector('.btn-img-ally').onclick = () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.onchange = e => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          card.querySelector('img').src = ev.target.result;
+          autoSaveToCache();
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      };
+      input.click();
+    };
+
+    card.querySelector('.btn-remove-ally').onclick = () => {
+      if (confirm("Remover aliado?")) { card.remove(); autoSaveToCache(); }
+    };
+
+    list.appendChild(card);
+  }
+
+  document.getElementById('addAllyNpc').addEventListener('click', () => {
+    const nameInput = document.getElementById('allyNpcName');
+    if (nameInput.value.trim()) {
+      createAllyNpc({ name: nameInput.value.trim(), desc: '', bonus: '', image: '' });
+      nameInput.value = '';
+      autoSaveToCache();
+    }
+  });
+
+  // Função para extrair os dados dos aliados da interface
+  const getAllyNpcData = () => {
+    const allies = [];
+    document.querySelectorAll('#ally-npc-list .solicitante-card').forEach(card => {
+      allies.push({
+        name: card.querySelector('h5').textContent,
+        desc: card.querySelector('.npc-desc-text').textContent,
+        bonus: card.querySelector('.npc-bonus-text').textContent,
+        image: card.querySelector('img').src
+      });
+    });
+    return allies;
+  };
+
+  // Listeners
+  document.getElementById('saveData').addEventListener('click', saveData);
+  document.getElementById('loadData').addEventListener('change', loadData);
+  document.getElementById('clearFailedMissions').addEventListener('click', missionModule.clearFailedMissions);
+  window.addEventListener('beforeunload', autoSaveToCache);
+
+  // Monitorar Cliques para Autosave
+  const container = document.querySelector('.main-container');
+  if (container) {
+    container.addEventListener('click', () => setTimeout(autoSaveToCache, 500));
+  }
+
+  // Carregamento inicial
+  loadFromCache();
 });
